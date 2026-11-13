@@ -16,6 +16,9 @@ public class LibraryItem {
     public String getId() {
         return id;
     }
+    public String getTitle(){
+        return title;
+    }
 
     public void setTitle(String title) {
         if (title == null || title.isBlank()) {
