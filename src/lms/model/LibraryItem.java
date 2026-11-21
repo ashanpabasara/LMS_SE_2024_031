@@ -1,4 +1,6 @@
 package lms.model;
+import lms.exception.ItemNotAvailableException;
+//import the exception
 
 /**
  * LibraryItem - Week 4 version.
@@ -12,6 +14,7 @@ public abstract class LibraryItem implements Loanable {
     private String id;
     private String title;
     private boolean isBorrowed;
+   private Member borrower;
 
     public LibraryItem(String id, String title) {
         setId(id);
@@ -36,21 +39,30 @@ public abstract class LibraryItem implements Loanable {
     // ---- Loanable contract (shared implementation lives here) ----
 
     @Override
-    public void loan(Member member) {
+    public void loan(Member member) throws ItemNotAvailableException {
         if (isBorrowed) {
-            System.out.println(title + " is already on loan.");
+            throw new ItemNotAvailableException(title + " is already on loan.");
         } else if (member.getBorrowedCount() >= member.getMaxBorrowLimit()) {
-            System.out.println(member.getName() + " has reached the limit of " + member.getMaxBorrowLimit() + " items.");
+            throw new ItemNotAvailableException(member.getName() + " has reached the limit of " + member.getMaxBorrowLimit() + " items.");
         } else {
             isBorrowed = true;
+            borrower = member;
             member.incrementBorrowedCount();
             System.out.println(title + " loaned to " + member.getName());
         }
     }
 
+
     @Override
-    public void returnItem() {
+    public void returnItem() throws ItemNotAvailableException {
+        if (!isBorrowed) {
+            throw new ItemNotAvailableException(title + " is not on loan.");
+        }
+
         isBorrowed = false;
+        borrower.decrementBorrowedCount();
+        borrower = null;
+
         System.out.println(title + " returned.");
     }
 
