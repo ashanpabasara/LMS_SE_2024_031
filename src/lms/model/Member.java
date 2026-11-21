@@ -39,7 +39,9 @@ public class Member implements Comparable<Member> {
     public int compareTo(Member other) {
         return Integer.compare(other.borrowedCount, this.borrowedCount);
     }
-
+    public void decrementBorrowedCount() {
+        setBorrowedCount(this.borrowedCount - 1);
+    }
     @Override
     public String toString() {
         return getClass().getSimpleName() + "{id='" + memberId + "', name='" + name
